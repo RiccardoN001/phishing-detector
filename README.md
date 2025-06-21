@@ -40,21 +40,27 @@ Uses the Radial Basis Function (RBF) kernel to find the optimal hyperplane that 
 ### 5. Multi-Layer Perceptron (MLP)
 A neural network with hidden layers that can learn non-linear relationships between features. The network uses backpropagation to learn complex patterns and interactions between website characteristics that simpler algorithms might miss.
 
+## Model Selection
+
+Model selection was performed using a stratified 5-fold cross-validation approach to ensure robust evaluation across different subsets of the data. The origilnal dataset was split into training and test sets, with 80% of the data used for training and 20% for testing.
+
+The training set (80% of the data) was further split training set (70% of the total dataset) and deployment set (10% of the total dataset). The deployment set was used to evaluate the final model's performance on unseen data after the model selection process.
+
 ## Performance
 
 The system achieves strong performance across all algorithms:
-| **Algorithm** | **F1-Score** |
-|---------------|--------------|
-| **MLP Classifier** | 95.3% |
-| **SVM** | 94.3% |
-| **KNN** | 94.2% |
-| **Logistic Regression** | 92.0% |
-| **Naive Bayes** | 86.5% |
+| **Algorithm** | **Score (Validation)** | **Score (Deployment)** |
+|---------------|--------------|--------------|
+| **SVM** | 96.4% | 96.5% |
+| **MLP Classifier** | 96.4% | 96.3% |
+| **KNN** | 95.5% | 96.2% |
+| **Logistic Regression** | 92.8% | 92.9% |
+| **Naive Bayes** | 88.6% | 89.1% |
 
-The MLP classifier was selected as the final model due to its superior performance on the test set:
+The SVM classifier, with this parameters setup: *{C=10, gamma=0.1, kernel='rbf'}*, was selected as the final model and used to train the entire training set (80% of the initial dataset) and test on the test set (data never seen during the training and model selection phase).
 
 | **Accuracy** | **Precision** | **Recall** | **F1-Score** |
 |--------------|---------------|------------|--------------|
-| 94.7%        | 94.8%         | 94.7%      | 94.7%        |
+| 96.4%        | 96.4%         | 96.5%      | 96.4%        |
 
 
