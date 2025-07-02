@@ -51,16 +51,40 @@ The training set (80% of the data) was further split training set (70% of the to
 The system achieves strong performance across all algorithms:
 | **Algorithm** | **Score (Validation)** | **Score (Deployment)** |
 |---------------|--------------|--------------|
-| **SVM** | 96.4% | 96.5% |
-| **MLP Classifier** | 96.4% | 96.3% |
-| **KNN** | 95.5% | 96.2% |
-| **Logistic Regression** | 92.8% | 92.9% |
-| **Naive Bayes** | 88.6% | 89.1% |
+| **SVM** | 94.3% | 94.9% |
+| **MLP Classifier** | 94.3% | 94.4% |
+| **KNN** | 93.2% | 93.2% |
+| **Logistic Regression** | 92.2% | 92.6% |
+| **Naive Bayes** | 88.2% | 87.1% |
 
 The SVM classifier, with this parameters setup: *{C=10, gamma=0.1, kernel='rbf'}*, was selected as the final model and used to train the entire training set (80% of the initial dataset) and test on the test set (data never seen during the training and model selection phase).
 
 | **Accuracy** | **Precision** | **Recall** | **F1-Score** |
 |--------------|---------------|------------|--------------|
-| 96.4%        | 96.4%         | 96.5%      | 96.4%        |
+| 94.2%        | 92.4%         | 95.2%      | 93.8%        |
 
+
+## Threshold Optimization for Security-Critical Applications
+
+In phishing detection systems, the cost of different types of classification errors is not equal. A **false negative** (classifying a phishing website as legitimate) poses a significant security risk, as users may unknowingly interact with malicious sites and compromise their sensitive information. Conversely, a **false positive** (flagging a legitimate website as phishing) results in inconvenience but maintains security.
+
+Therefore, the detection system should prioritize **minimizing false negatives** over minimizing false positives. This requires optimizing for **recall** (sensitivity) rather than overall accuracy, accepting a trade-off in precision to ensure maximum protection against phishing attacks.
+
+To achieve this, the classification threshold can be adjusted below the default value of 0.5. By lowering the threshold, the model becomes more sensitive to detecting phishing attempts, thus increasing recall at the potential cost of precision.
+While SVM achieved the highest performance, it doesn't naturally provide probability estimates required for threshold adjustment. This presents two options:
+
+1. **Use MLP Classifier**: The second-best performing model that natively outputs probabilities
+2. **Apply Platt Scaling**: Calibrate SVM outputs to obtain probability estimates
+
+For this implementation, the **MLP Classifier** was selected with optimized parameters:
+- `hidden_layer_sizes=55`
+- `activation='tanh'`
+- `solver='adam'`
+- `alpha=0.005`
+
+By adjusting the classification threshold below the default 0.5, the system can achieve higher recall, ensuring that fewer phishing websites are misclassified as legitimate, thereby enhancing overall security posture.
+
+| **Accuracy** | **Precision** | **Recall** | **F1-Score** |
+|--------------|---------------|------------|--------------|
+| 91.7%        | 86.3%         | 97.6%      | 91.6%        |
 
